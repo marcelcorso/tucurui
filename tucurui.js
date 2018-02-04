@@ -1,64 +1,65 @@
-r = Math.random;
 
 var b = document.getElementsByTagName('body')[0];
 
-function rcolor() {
-  return "rgba(" + Math.floor(r()*255) + ","+Math.floor(r()*255)+","+Math.floor(r()*255)+","+r()+")";
-}
+var biggerPadding = 100;
+var smallerPadding = 2;
 
-var paddingStart = 100; 
-var paddingEnd = 5;
-
-
-var lastDiv = b;
-var padding = paddingStart;
 var i = 0;
-while (padding > paddingEnd) {
-  var div = document.createElement('div');
-  
-  div.style.background = i % 2 ? "white" : "black";
-  div.style.padding = padding + "px";
-  div.padding = padding;
-  lastDiv.append(div);  
+var div = document.createElement('div');
+div.style.background = i % 2 ? "white" : "black";
+div.padding = biggerPadding;
+div.style.padding = div.padding + "px";
+i++; 
+b.append(div);
 
-  lastDiv = div;
-  padding = padding - 7;
-  i++;
-}
+var lastDiv = firstDiv = div;
 
-// find first div
-var firstDiv; 
-for(i = 0; i < b.children.length; i++) {
-  if (b.children[i].tagName == "DIV") {
-    firstDiv = b.children[i]; 
-  }
-}
-
+var inc = 1;
+var incDiv = null;
 
 function tick() {
-  var div = firstDiv;
-  div.padding -= 1;
-  div.style.padding = div.padding + "px";
 
-  if (div.padding == 0) {
+  if (firstDiv.padding == 0) {
     // stop shrinking the outmost div
     firstDiv = firstDiv.firstElementChild;
+    // TODO kill 
+  }
 
-    // and add a new one 
+  if ((lastDiv.offsetWidth > (smallerPadding*2)) && (lastDiv.padding > smallerPadding)) {
+    // add a new one 
     var div = document.createElement('div');
     div.style.background = i % 2 ? "white" : "black";
-    div.style.padding = paddingStart + "px";
-    div.padding = paddingStart;
+    div.padding = lastDiv.padding - 5;
+    div.style.padding = div.padding + "px";
+    div.id = "d-" + i;
     lastDiv.append(div);
 
     lastDiv = div;
-    padding = padding - 7;
     i++;
 
+    console.log("div.padding: " + div.padding);
+  }
+
+  firstDiv.padding -= 1;
+  firstDiv.style.padding = firstDiv.padding + "px";
+
+  if (incDiv != null) {
+    console.log("incDiv not null: " + incDiv.id + ";  padding: " + incDiv.padding);
+    incDiv.padding += inc;
+    incDiv.style.padding = incDiv.padding + "px";
+    inc++;
+    console.log("           padding after: " + incDiv.padding);
+    incDiv = incDiv.firstElementChild;
+  } else {
+    console.log("incDiv NULL");
+    incDiv = firstDiv.firstElementChild;
+    inc = 1;
   }
 }
 
 
-setInterval(tick, 50);
+// var interval = setInterval(tick, 50);
 
-
+function stop() {
+  clearInterval(interval);
+}
