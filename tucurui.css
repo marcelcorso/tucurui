@@ -1,0 +1,9 @@
+html, body {
+  height: 100%;
+  margin: 0px;
+}
+
+div {
+  height: 100%;
+  padding: 10px;
+}
